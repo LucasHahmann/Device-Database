@@ -1,13 +1,52 @@
 // Get the elements..
 const addDeviceButton = document.getElementById("addDevice");
 const submitButton = document.getElementById("submit");
+var alertPlaceholder = document.getElementById('Alert')
 
-submitButton.addEventListener('click', event => {
+// Functions..
+function Sleep(milliseconds) {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
+ }
+
+async function fatch(endpoint, variables){
+  var _this = this;
+  var backend = "http://localhost:300/"
+  var url = "";
+  var fetchMethod = "";
+  var b0dy= null;
+  switch(endpoint) {
+      case "createDevice":
+          url = "http://localhost:3000/create/createDevice";
+          fetchMethod = "POST";
+          b0dy = JSON.stringify({"data": variables})
+      }
+      // Set the fetch with variables
+      var resfetch = await fetch(url, {method: fetchMethod,
+          headers: {
+              'Content-Type': 'application/json',
+              //'Authorization': 'Bearer ' + store.state.token
+            },
+              body: b0dy})
+          .then(async function(response){if(response.status != 200){console.log("Oh no do stuff");}return response.json();})
+          .then(async function (data) {if(_this.check == true){console.log("Alright");}return data;})
+          return resfetch;
+}
+
+async function alert(message, type) {
+  var wrapper = document.createElement('div')
+  wrapper.innerHTML = '<div class="alert alert-' + type + ' alert-dismissible" role="alert">' + message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" id="Close"></button></div>'
+
+  alertPlaceholder.append(wrapper)
+  await Sleep(4000);
+  document.getElementById('Close').click();
+
+}
+submitButton.addEventListener('click', async event => {
   // First get personal Informations
   var firstname = document.getElementById("firstname").value;
   var lastname = document.getElementById("lastname").value;
   var ID = document.getElementById("id").value;
-  var building = document.getElementById("building");
+  //var building = document.getElementById("building");
 
   var roomNumber = document.getElementById("roomNumber").value;
   var telephoneNumber = document.getElementById("telephoneNumber").value;
@@ -17,7 +56,7 @@ submitButton.addEventListener('click', event => {
     "firstname": firstname,
     "lastname": lastname,
     "ID": ID,
-    "building": building,
+   // "building": building,
     "roomNumber": roomNumber,
     "telephoneNumber": telephoneNumber,
     "device": []
@@ -40,7 +79,9 @@ submitButton.addEventListener('click', event => {
       tmpArray = {}
     } 
   }
-  console.log(data)
+  var res = await fatch("createDevice", data);
+  alert(res.message, 'success')
+  console.log(res)
 })
 
 addDeviceButton.addEventListener('click', event => {

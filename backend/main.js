@@ -21,6 +21,9 @@ app.get("/test", (req, res) => {
 const mainRoute = require('./routes/main/index.js');
 app.use('/main', mainRoute);
 
+const createRoute = require('./routes/create/index.js');
+app.use('/create', createRoute);
+
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })
