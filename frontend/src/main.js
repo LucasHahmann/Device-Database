@@ -1,9 +1,27 @@
 // Get the elements..
 const addDeviceButton = document.getElementById("addDevice");
 const submitButton = document.getElementById("submit");
-var alertPlaceholder = document.getElementById('Alert')
+var alertPlaceholder = document.getElementById('Alert');
+
+var deviceCount = 0
 
 // Functions..
+async function getManufactors (){
+  var res = await fatch("getManufactors")
+  var data = res.userData
+  var childDivs = document.getElementById('devices').getElementsByTagName('div');
+  for( i=0; i< childDivs.length; i++ )
+  {
+    var childDiv = childDivs[i];
+    if (childDiv.classList.contains("manufactorSelect")){
+      var text = '<option selected="">Select a manufactor</option>'
+      data.forEach(element => {
+        text = text + `<option value="${element}">${element}</option>`
+      });
+      childDiv.querySelector("select").innerHTML = text
+    }
+  }
+}
 function Sleep(milliseconds) {
   return new Promise(resolve => setTimeout(resolve, milliseconds));
  }
@@ -16,9 +34,12 @@ async function fatch(endpoint, variables){
   var b0dy= null;
   switch(endpoint) {
       case "createDevice":
-          url = "http://localhost:3000/create/createDevice";
-          fetchMethod = "POST";
-          b0dy = JSON.stringify({"data": variables})
+        url = "http://localhost:3000/create/createDevice";
+        fetchMethod = "POST";
+        b0dy = JSON.stringify({"data": variables})
+      case "getManufactors":
+        url = "http://localhost:3000/manufactor/getManufactors";
+        fetchMethod = "GET";
       }
       // Set the fetch with variables
       var resfetch = await fetch(url, {method: fetchMethod,
@@ -39,8 +60,8 @@ async function alert(message, type) {
   alertPlaceholder.append(wrapper)
   await Sleep(4000);
   document.getElementById('Close').click();
-
 }
+
 submitButton.addEventListener('click', async event => {
   // First get personal Informations
   var firstname = document.getElementById("firstname").value;
@@ -84,11 +105,17 @@ submitButton.addEventListener('click', async event => {
   console.log(res)
 })
 
-addDeviceButton.addEventListener('click', event => {
+addDeviceButton.addEventListener('click', async event => {
+  
   const div = document.createElement('div');
   
   div.innerHTML = `
-  <div class="container">
+  <div class="container ${deviceCount} deleteDevice">
+  <div class="row justify-content-end">
+    <div class="col align-self-end">
+      <button type="button" class="btn btn-danger deletedevice" id="${deviceCount}">Delete Device</button>
+    </div>
+  </div>
   <div class="row">
     <div class="col deviceSelect">
       <select class="form-select" aria-label="Default select example">
@@ -123,4 +150,6 @@ addDeviceButton.addEventListener('click', event => {
   </div>
 </div>`;
   document.getElementById('devices').appendChild(div);
+  deviceCount = deviceCount + 1
+  await getManufactors()
 });

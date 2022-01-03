@@ -20,11 +20,12 @@ Device.createDevice = (data, callback) => {
           return
         }
         console.log(result)
-        callback(null, result);
+        
         })  
     })
       
   });
+  callback(null, result);
 }
 
 module.exports = Device;
