@@ -5,20 +5,37 @@ var alertPlaceholder = document.getElementById('Alert');
 
 var deviceCount = 0
 
+document.querySelectorAll('.manufactor').forEach(item => {
+  console.log(item)
+  item.addEventListener('click', event => {
+    //handle click
+    console.log("Test")
+  })
+})
+
+
 // Functions..
 async function getManufactors (){
+  // Get the manufactors
   var res = await fatch("getManufactors")
   var data = res.userData
+  // Get the selected fields
   var childDivs = document.getElementById('devices').getElementsByTagName('div');
   for( i=0; i< childDivs.length; i++ )
   {
+    // Foreach selected field
     var childDiv = childDivs[i];
+    // If contains the manufactorSelect
     if (childDiv.classList.contains("manufactorSelect")){
-      var text = '<option selected="">Select a manufactor</option>'
-      data.forEach(element => {
-        text = text + `<option value="${element}">${element}</option>`
-      });
-      childDiv.querySelector("select").innerHTML = text
+      // If the Value is not equal to Select a manufactor
+      if (childDiv.querySelectorAll("select")[0].value == "Init"){
+        var text = '<option selected="">Select a manufactor</option>'
+        data.forEach(element => {
+          text = text + `<option value="${element}">${element}</option>`
+        });
+        childDiv.querySelector("select").innerHTML = text
+      } 
+      
     }
   }
 }
@@ -61,6 +78,8 @@ async function alert(message, type) {
   await Sleep(4000);
   document.getElementById('Close').click();
 }
+
+// Event listeners
 
 submitButton.addEventListener('click', async event => {
   // First get personal Informations
@@ -132,10 +151,8 @@ addDeviceButton.addEventListener('click', async event => {
   </div>
   <div class="row">
     <div class="col manufactorSelect">
-      <select class="form-select" aria-label="Manufactor">
-        <option selected>Select a manufactor</option>
-        <option value="Asus">Asus</option>
-        <option value="HP">HP</option>
+      <select class="form-select manufactor" aria-label="Manufactor">
+      <option selected="">Init</option>
       </select>
     </div>
     <div class="col modelSelect">
@@ -152,4 +169,6 @@ addDeviceButton.addEventListener('click', async event => {
   document.getElementById('devices').appendChild(div);
   deviceCount = deviceCount + 1
   await getManufactors()
+  //console.log(document.querySelectorAll('.manufactor'))
 });
+
