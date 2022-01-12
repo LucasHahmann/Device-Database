@@ -5,16 +5,29 @@ var alertPlaceholder = document.getElementById('Alert');
 
 var deviceCount = 0
 
-document.querySelectorAll('.manufactor').forEach(item => {
-  console.log(item)
-  item.addEventListener('click', event => {
-    //handle click
-    console.log("Test")
-  })
-})
+var a = true;
 
+
+checkConnection();
 
 // Functions..
+async function checkConnection(){
+  //while (true) {
+    await fetch("http://localhost:3000/settings/checkConnection").then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+      }
+    })
+    .then((responseJson) => {
+      alert("Backend ist reachable.", 'success', 3000)
+      return;
+    })
+    .catch((error) => {
+      alert("Backend not responding!", 'danger', 7000)
+    });
+ // }
+}
 async function getManufactors (){
   // Get the manufactors
   var res = await fatch("getManufactors")
@@ -57,6 +70,9 @@ async function fatch(endpoint, variables){
       case "getManufactors":
         url = "http://localhost:3000/manufactor/getManufactors";
         fetchMethod = "GET";
+      /* case "checkConnection":
+        url = "http://localhost:3000/settings/checkConnection"
+        fetchMethod = "GET"; */
       }
       // Set the fetch with variables
       var resfetch = await fetch(url, {method: fetchMethod,
@@ -70,14 +86,36 @@ async function fatch(endpoint, variables){
           return resfetch;
 }
 
-async function alert(message, type) {
+async function alert(message, type, time) {
   var wrapper = document.createElement('div')
   wrapper.innerHTML = '<div class="alert alert-' + type + ' alert-dismissible" role="alert">' + message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" id="Close"></button></div>'
 
   alertPlaceholder.append(wrapper)
-  await Sleep(4000);
+  await Sleep(time);
   document.getElementById('Close').click();
 }
+
+async function getModels(){
+  document.querySelectorAll('.manufactorSelect').forEach(item => {
+    item.addEventListener('change', event => {
+      //handle click
+      console.log(event)
+      console.log(item[0])
+    })
+  })
+}
+
+async function getDeleteButtons(){
+
+  document.querySelectorAll('.deleteDevice').forEach(item => {
+    // Loop through all buttons and add an event listener
+    item.addEventListener('click', event => {
+      // If click, get the container with the deviceCount and remove it
+      var deleteDevice = document.getElementById(item.classList[3]);
+      deleteDevice.remove()
+    })
+  })
+} 
 
 // Event listeners
 
@@ -120,7 +158,7 @@ submitButton.addEventListener('click', async event => {
     } 
   }
   var res = await fatch("createDevice", data);
-  alert(res.message, 'success')
+  alert(res.message, 'success', 6000)
   console.log(res)
 })
 
@@ -129,10 +167,10 @@ addDeviceButton.addEventListener('click', async event => {
   const div = document.createElement('div');
   
   div.innerHTML = `
-  <div class="container ${deviceCount} deleteDevice">
+  <div class="container" id="${deviceCount}">
   <div class="row justify-content-end">
     <div class="col align-self-end">
-      <button type="button" class="btn btn-danger deletedevice" id="${deviceCount}">Delete Device</button>
+      <button type="button" class="btn btn-danger deleteDevice ${deviceCount}">Delete Device</button>
     </div>
   </div>
   <div class="row">
@@ -168,7 +206,9 @@ addDeviceButton.addEventListener('click', async event => {
 </div>`;
   document.getElementById('devices').appendChild(div);
   deviceCount = deviceCount + 1
+  await getDeleteButtons()
   await getManufactors()
+  await getModels()
   //console.log(document.querySelectorAll('.manufactor'))
 });
 

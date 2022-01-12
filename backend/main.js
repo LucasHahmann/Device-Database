@@ -27,6 +27,9 @@ app.use('/create', createRoute);
 const manufactorRoute = require('./routes/manufactor/index.js');
 app.use('/manufactor', manufactorRoute);
 
+const settingRoute = require('./routes/settings/index.js');
+app.use('/settings', settingRoute);
+
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })
