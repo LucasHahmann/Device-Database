@@ -1,3 +1,12 @@
+const electron = require('electron');
+const {ipcRenderer} = electron;
+
+function test(){
+  ipcRenderer.send("connection:fail", "Hi");
+}
+
+
+
 // Get the elements..
 const addDeviceButton = document.getElementById("addDevice");
 const submitButton = document.getElementById("submit");
@@ -24,6 +33,7 @@ async function checkConnection(){
       return;
     })
     .catch((error) => {
+      test();
       alert("Backend not responding!", 'danger', 7000)
     });
  // }
