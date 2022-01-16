@@ -20,6 +20,7 @@ exports.getManufactors = (req, res) => {
 };
 
 exports.getModels = (req, res) => {
+    console.log("Bin da");
     if (!(req.body)) {
         res.status(400).send({
             message: 'No Body provided',
@@ -27,7 +28,7 @@ exports.getModels = (req, res) => {
         }); //bad request
         return;
     }
-    console.log(req.body)
+    console.log(req.body, "BODY")
     ManufactorSQL.getModels(req.body.manufactor, (err, data) => {
         if (err) {
             res.status(500).send({

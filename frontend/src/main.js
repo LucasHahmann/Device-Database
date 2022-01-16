@@ -1,11 +1,12 @@
 const electron = require('electron');
 const {ipcRenderer} = electron;
 
+const api = require('./methods/fatch.js');
+api.fatch("12", "345")
+
 function test(){
-  ipcRenderer.send("connection:fail", "Hi");
+  ipcRenderer.send("connection:fail");
 }
-
-
 
 // Get the elements..
 const addDeviceButton = document.getElementById("addDevice");
@@ -41,6 +42,7 @@ async function checkConnection(){
 async function getManufactors (){
   // Get the manufactors
   var res = await fatch("getManufactors")
+  api.fatch("12", "345")
   var data = res.userData
   // Get the selected fields
   var childDivs = document.getElementById('devices').getElementsByTagName('div');
@@ -66,35 +68,45 @@ function Sleep(milliseconds) {
   return new Promise(resolve => setTimeout(resolve, milliseconds));
  }
 
-async function fatch(endpoint, variables){
-  var _this = this;
-  var backend = "http://localhost:300/"
-  var url = "";
-  var fetchMethod = "";
-  var b0dy= null;
-  switch(endpoint) {
-      case "createDevice":
-        url = "http://localhost:3000/create/createDevice";
-        fetchMethod = "POST";
-        b0dy = JSON.stringify({"data": variables})
-      case "getManufactors":
-        url = "http://localhost:3000/manufactor/getManufactors";
-        fetchMethod = "GET";
-      /* case "checkConnection":
-        url = "http://localhost:3000/settings/checkConnection"
-        fetchMethod = "GET"; */
-      }
-      // Set the fetch with variables
-      var resfetch = await fetch(url, {method: fetchMethod,
-          headers: {
-              'Content-Type': 'application/json',
-              //'Authorization': 'Bearer ' + store.state.token
-            },
-              body: b0dy})
-          .then(async function(response){if(response.status != 200){console.log("Oh no do stuff");}return response.json();})
-          .then(async function (data) {if(_this.check == true){console.log("Alright");}return data;})
-          return resfetch;
-}
+// async function fatch(endpoint, variables){
+//   var _this = this;
+//   var backend = "http://localhost:300/"
+//   var url = "";
+//   var fetchMethod = "";
+//   var b0dy= null;
+//   switch(endpoint) {
+//       case "createDevice":
+//         url = "http://localhost:3000/create/createDevice";
+//         fetchMethod = "POST";
+//         b0dy = JSON.stringify({"data": variables});
+//         break;
+//       case "getManufactors":
+//         url = "http://localhost:3000/manufactor/getManufactors";
+//         fetchMethod = "GET";
+//         break;
+//       case "getModels":
+//         url = "http://localhost:3000/manufactor/getModels";
+//         fetchMethod = "POST";
+//         b0dy = JSON.stringify({"manufactor": variables});
+//      /* case "getModels":
+//         url = "http://localhost:3000/manufactor/getModels"
+//         fetchMethod = "POST";
+//         b0dy = JSON.stringify({"manufactor":variables})
+//        case "checkConnection":
+//         url = "http://localhost:3000/settings/checkConnection"
+//         fetchMethod = "GET"; */
+//       }
+//       // Set the fetch with variables
+//       var resfetch = await fetch(url, {method: fetchMethod,
+//           headers: {
+//               'Content-Type': 'application/json',
+//               //'Authorization': 'Bearer ' + store.state.token
+//             },
+//               body: b0dy})
+//           .then(async function(response){if(response.status != 200){console.log("Oh no do stuff");}return response.json();})
+//           .then(async function (data) {if(_this.check == true){console.log("Alright");}return data;})
+//           return resfetch;
+// }
 
 async function alert(message, type, time) {
   var wrapper = document.createElement('div')
@@ -107,10 +119,12 @@ async function alert(message, type, time) {
 
 async function getModels(){
   document.querySelectorAll('.manufactorSelect').forEach(item => {
-    item.addEventListener('change', event => {
+    item.addEventListener('change', async event => {
       //handle click
-      console.log(event)
-      console.log(item[0])
+      //console.log(event.path)
+      var res = await fatch("getModels", event.path[0].value)
+      console.log(res)
+      
     })
   })
 }
