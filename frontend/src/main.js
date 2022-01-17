@@ -2,7 +2,6 @@ const electron = require('electron');
 const {ipcRenderer} = electron;
 
 const api = require('./methods/fatch.js');
-api.fatch("12", "345")
 
 function test(){
   ipcRenderer.send("connection:fail");
@@ -41,8 +40,7 @@ async function checkConnection(){
 }
 async function getManufactors (){
   // Get the manufactors
-  var res = await fatch("getManufactors")
-  api.fatch("12", "345")
+  var res = await api.fatch("getManufactors")
   var data = res.userData
   // Get the selected fields
   var childDivs = document.getElementById('devices').getElementsByTagName('div');
@@ -120,10 +118,24 @@ async function alert(message, type, time) {
 async function getModels(){
   document.querySelectorAll('.manufactorSelect').forEach(item => {
     item.addEventListener('change', async event => {
-      //handle click
-      //console.log(event.path)
-      var res = await fatch("getModels", event.path[0].value)
-      console.log(res)
+      var count = item.classList[2];
+      var res = await api.fatch("getModels", event.path[0].value)
+      var childDivs = document.getElementById('devices').getElementsByTagName('div');
+      for( i=0; i< childDivs.length; i++ )
+      {
+        // Foreach selected field
+        var childDiv = childDivs[i];
+        // If contains the modeSelect class and model = count
+        if (childDiv.classList.contains("modelSelect") && childDiv.classList.contains(count)){
+          var text = '<option selected="">Select a Model</option>'
+          res.userData.forEach(element => {
+            text = text + `<option value="${element}">${element}</option>`
+          });
+          childDiv.querySelector("select").innerHTML = text
+        }
+      }
+      
+      // <option value="Latitude">Latitude</option>
       
     })
   })
@@ -181,7 +193,7 @@ submitButton.addEventListener('click', async event => {
       tmpArray = {}
     } 
   }
-  var res = await fatch("createDevice", data);
+  var res = await api.fatch("createDevice", data);
   alert(res.message, 'success', 6000)
   console.log(res)
 })
@@ -212,15 +224,14 @@ addDeviceButton.addEventListener('click', async event => {
     </div>
   </div>
   <div class="row">
-    <div class="col manufactorSelect">
+    <div class="col manufactorSelect ${deviceCount}">
       <select class="form-select manufactor" aria-label="Manufactor">
       <option selected="">Init</option>
       </select>
     </div>
-    <div class="col modelSelect">
-      <select class="form-select" aria-label="Model">
-        <option selected>Select a model</option>
-        <option value="Latitude">Latitude</option>
+    <div class="col modelSelect ${deviceCount}">
+      <select class="form-select model ${deviceCount}" aria-label="Model">
+        <option selected="">Init</option>
       </select>
     </div>
   </div>
