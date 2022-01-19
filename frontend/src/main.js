@@ -1,11 +1,25 @@
 const electron = require('electron');
+const fs = require('fs');
+const { promisify } = require('util');
+const path = require('path');
+const readFile = promisify(fs.readFile);
 const {ipcRenderer} = electron;
 
 const api = require('./methods/fatch.js');
+const navbar = require('./methods/loadNavbar.js');
 
 function test(){
   ipcRenderer.send("connection:fail");
 }
+
+// Load and prepend the navbar
+var res = navbar.loadElements("Navbar", ["./index.html", "./subWindows/search.html", "./subWindows/options.html"])
+const nav = document.createElement('Navbar');
+nav.innerHTML = res;
+document.body.prepend(nav);
+
+
+
 
 // Get the elements..
 const addDeviceButton = document.getElementById("addDevice");
@@ -134,9 +148,6 @@ async function getModels(){
           childDiv.querySelector("select").innerHTML = text
         }
       }
-      
-      // <option value="Latitude">Latitude</option>
-      
     })
   })
 }
