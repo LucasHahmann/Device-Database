@@ -28,7 +28,6 @@ function loadElements(element, sites){
           </div>
           `
             return nav;
-
     }
 
     

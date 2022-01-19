@@ -30,6 +30,12 @@ app.use('/manufactor', manufactorRoute);
 const settingRoute = require('./routes/settings/index.js');
 app.use('/settings', settingRoute);
 
+const buildingRoute = require('./routes/buildings/index.js');
+app.use('/buildings', buildingRoute);
+
+const typesRoute = require('./routes/types/index.js');
+app.use('/types', typesRoute);
+
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })

@@ -1,15 +1,69 @@
 
+const api = require('../methods/fatch.js');
+const navbar = require('../methods/loadNavbar.js');
+// Load and prepend the navbar
+var res = navbar.loadElements("Navbar", ["../index.html", "./search.html", "./options.html"])
+const nav = document.createElement('Navbar');
+nav.innerHTML = res;
+document.body.prepend(nav);
 
-var countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Central Arfrican Republic","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cuba","Curacao","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia"]
 
+var button = document.getElementById("buttonBuilding");
+var buildingInpput = document.getElementById("insertBuilding");
 
+var typeButton = document.getElementById("buttonType");
+var typeInput = document.getElementById("typeInsert");
 
-function autocomplete(inp, arr) {
+button.addEventListener("click", async event => {
+  if(button.querySelectorAll("buttonBuilding")[0].innerHTML == "Delete"){
+    await api.fatch("removeBuilding", buildingInpput.value)
+    buildingInpput.value = "";
+    initBuildings()
+  }
+  else {
+    await api.fatch("addBuilding", buildingInpput.value)
+    buildingInpput.value = "";
+    initBuildings()
+  } 
+})
+
+typeButton.addEventListener("click", async event => {
+  console.log(typeButton.querySelectorAll("button"))
+  if(typeButton.querySelectorAll("button")[0].innerHTML == "Delete"){
+    await api.fatch("removeType", typeInput.value)
+    typeInput.value = "";
+    initTypes()
+  }
+  else {
+    await api.fatch("addType", typeInput.value)
+    typeInput.value = "";
+    initTypes()
+  } 
+})
+
+function autocomplete(inp, arr, type) {
+
     /*the autocomplete function takes two arguments,
     the text field element and an array of possible autocompleted values:*/
     var currentFocus;
     /*execute a function when someone writes in the text field:*/
     inp.addEventListener("input", function(e) {
+      if(type == "building"){
+        if(arr.includes(inp.value)){
+          button.innerHTML = `<button type="button" class="btn btn-danger">Delete</button>`
+        } else {
+          button.innerHTML = `<button type="button" class="btn btn-success">Add</button>`
+        }
+      } 
+      if(type == "types"){ {
+        if(arr.includes(inp.value)){
+          typeButton.innerHTML = `<button type="button" class="btn btn-danger">Delete</button>`
+        } else {
+          typeButton.innerHTML = `<button type="button" class="btn btn-success">Add</button>`
+        }
+      }
+      }
+        
         var a, b, i, val = this.value;
         /*close any already open lists of autocompleted values*/
         closeAllLists();
@@ -101,4 +155,15 @@ function autocomplete(inp, arr) {
   });
   }
 
-  autocomplete(document.getElementById("buildingInput"), countries);
+  async function initTypes(){
+    var types = await api.fatch("getTypes")
+    console.log(types.userData)
+    autocomplete(typeInput, types.userData, "types");
+  }
+
+  async function initBuildings(){
+    var buildings = await api.fatch("getBuildings")
+    autocomplete(buildingInpput, buildings.userData, "building");
+  }
+  initTypes();
+  initBuildings();
