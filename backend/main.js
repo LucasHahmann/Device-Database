@@ -18,6 +18,17 @@ app.get("/test", (req, res) => {
     res.json("It work!");
 })
 
+// 
+var count = 0;
+app.get("/count", (req, res) => {
+    res.json(count);
+})
+
+app.get("/countChange", (req, res) => {
+    count = count + 1;
+    res.json(count);
+})
+
 const mainRoute = require('./routes/main/index.js');
 app.use('/main', mainRoute);
 
@@ -35,6 +46,10 @@ app.use('/buildings', buildingRoute);
 
 const typesRoute = require('./routes/types/index.js');
 app.use('/types', typesRoute);
+
+const searchRoute = require('./routes/search/index.js');
+app.use('/search', searchRoute);
+
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)

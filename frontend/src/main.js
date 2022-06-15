@@ -2,6 +2,7 @@ const electron = require('electron');
 const fs = require('fs');
 const { promisify } = require('util');
 const path = require('path');
+const Store = require('electron-store');
 const readFile = promisify(fs.readFile);
 const {ipcRenderer} = electron;
 

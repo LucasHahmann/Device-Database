@@ -47,6 +47,14 @@ async function fatch(endpoint, variables){
           url = "http://localhost:3000/types/remove";
           fetchMethod = "POST";
           b0dy = JSON.stringify({"type": variables});
+        case "search":
+          url = "http://localhost:3000/search/search";
+          fetchMethod = "POST";
+          b0dy = JSON.stringify({"value": variables});
+        case "count":
+          url = "http://localhost:3000/count";
+          fetchMethod = "GET";
+          
           
        /* case "getModels":
           url = "http://localhost:3000/manufactor/getModels"

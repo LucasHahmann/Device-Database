@@ -47,3 +47,7 @@ input[type=submit] {
   background-color: DodgerBlue !important;
   color: #ffffff;
 }
+
+.rowManufactor {
+  border: 5px solid lightblue;
+}

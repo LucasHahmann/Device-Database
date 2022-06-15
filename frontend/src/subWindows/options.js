@@ -1,4 +1,6 @@
-
+const electron = require('electron');
+const fs = require('fs');
+const {ipcRenderer} = electron;
 const api = require('../methods/fatch.js');
 const navbar = require('../methods/loadNavbar.js');
 // Load and prepend the navbar
@@ -8,11 +10,28 @@ nav.innerHTML = res;
 document.body.prepend(nav);
 
 
+
+
+var manufactorModelContainer = document.getElementById("addManufactorModel");
+var manufactorSelect = document.getElementById("manufactorSelect");
+var addManufactor = document.getElementById("addManufactor");
+
+// Get the count from the child divs
+var count = manufactorModelContainer.getElementsByTagName('div').length
+
+  
+
 var button = document.getElementById("buttonBuilding");
 var buildingInpput = document.getElementById("insertBuilding");
 
 var typeButton = document.getElementById("buttonType");
 var typeInput = document.getElementById("typeInsert");
+
+var savebutton = document.getElementById("saveButton")
+
+savebutton.addEventListener("click", async event => {
+  var addManufactorDiv = document.querySelectorAll("#addManufactorModel")
+})
 
 button.addEventListener("click", async event => {
   if(button.querySelectorAll("buttonBuilding")[0].innerHTML == "Delete"){
@@ -28,7 +47,6 @@ button.addEventListener("click", async event => {
 })
 
 typeButton.addEventListener("click", async event => {
-  console.log(typeButton.querySelectorAll("button"))
   if(typeButton.querySelectorAll("button")[0].innerHTML == "Delete"){
     await api.fatch("removeType", typeInput.value)
     typeInput.value = "";
@@ -157,7 +175,6 @@ function autocomplete(inp, arr, type) {
 
   async function initTypes(){
     var types = await api.fatch("getTypes")
-    console.log(types.userData)
     autocomplete(typeInput, types.userData, "types");
   }
 
@@ -167,3 +184,78 @@ function autocomplete(inp, arr, type) {
   }
   initTypes();
   initBuildings();
+
+
+  
+
+  addManufactor.addEventListener("click", event => {
+    const div = document.createElement('div');
+  
+    div.innerHTML = `
+    <div class="container ${count} manufactorSelect">
+      <div class="row ${count} rowManufactor">
+        <div class="col">
+          <select id="Manufactor" class="${count}"><option selected="">Init</option></select>
+        </div>
+        <div class="col models ${count}">
+          <input type="text" id="models"></input>
+        </div>
+      </div>
+    </div>`
+      ;
+
+    count = count + 1;
+    manufactorModelContainer.appendChild(div);
+    initManufactor();
+    initModels();
+  })
+  async function initManufactor(){
+    var res = await api.fatch("getManufactors");
+    var childDivs = manufactorModelContainer.getElementsByTagName('div');
+    for(i = 0; i< childDivs.length; i++){
+      // Foreach selected field
+      var childDiv = childDivs[i];
+      // If contains the modeSelect class and model = count
+      if (childDiv.classList.contains("manufactorSelect")){
+        var select = childDiv.querySelector("select")  
+        if(select.innerHTML == '<option selected="">Init</option>'){
+          var text = '<option selected="">Select a manufactor</option>'
+          res.userData.forEach(element => {
+            text = text + `<option value="${element}">${element}</option>`
+          });
+          select.innerHTML = text;
+        }
+      }
+    }
+
+  }
+
+    
+
+
+  async function initModels(){
+    manufactorModelContainer.querySelectorAll('.manufactorSelect').forEach(item => {
+      console.log(item)
+      item.addEventListener('change', async event => {
+        var countChange = item.classList[1];
+        //console.log(countChange)
+        var res = await api.fatch("getModels", event.path[0].value)
+        var childDivs = manufactorModelContainer.getElementsByTagName('div');
+        for( i=0; i< childDivs.length; i++ )
+        {
+          // Foreach selected field
+          var childDiv = childDivs[i];
+          // If contains the modeSelect class and model = count
+          var text = "";
+          //console.log(childDiv.classList)
+          if (childDiv.classList.contains("models") && childDiv.classList.contains(countChange)) console.log(childDiv)
+          if (childDiv.classList.contains("models") && childDiv.classList.contains(countChange)){
+            res.userData.forEach(element => {
+              text = text + `<input type="text" value="${element}"></input>`
+            });
+            childDiv.innerHTML = text
+          }
+        }
+      })
+    })
+  }
