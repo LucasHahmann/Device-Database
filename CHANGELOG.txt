@@ -1,0 +1,9 @@
+Change Log
+==========
+
+1.0.0 (16.06.2022)
+------------------
+- First release
+    - Create devices
+    - Search for devices
+    - Manage Manufactors and Models, Buildings and Types

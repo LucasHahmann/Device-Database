@@ -9,16 +9,6 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
   app.quit();
 }
 
-const Store = require('electron-store');
-
-const store = new Store();
-
-store.set('count', 0);
-console.log(store.get('count'));
-//=> '🦄'
-
-
-
 const createMainWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -78,6 +68,10 @@ ipcMain.on("count:get", (e, data)=>{
 
 ipcMain.on("count:change", (e, data)=>{
   e.reply("reply", store.get('count'))
+})
+
+ipcMain.on("site:changes", (e, data) => {
+
 })
 
 

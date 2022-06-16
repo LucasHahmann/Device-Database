@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="content">
+        <div id="Form">
+            <div class="container">
+              <div class="row">
+                <div class="col">
+                  <h2>Personal Informations</h2>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <!-- First name Input -->
+                  <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon3">First name: </span>
+                    <input type="text" class="form-control" id="firstname" aria-describedby="basic-addon3">
+                  </div>
+                </div>
+                <div class="col">
+                  <!-- Last name Input -->
+                  <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon3">Last name: </span>
+                    <input type="text" class="form-control" id="lastname" aria-describedby="basic-addon3">
+                  </div>
+                </div>
+                <div class="col">
+                  <!-- ID Input -->
+                  <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon3">ID : </span>
+                    <input type="text" class="form-control" id="id" aria-describedby="basic-addon3">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <!-- Building Input -->
+                  <div class="input-group mb-3">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="building1">Building</button>
+                    <ul class="dropdown-menu building" id="building">
+                      <li><a class="dropdown-item" href="#">A</a></li>
+                      <li><a class="dropdown-item" href="#">B</a></li>
+                    </ul>
+                    <!-- Room Number -->
+                    <input type="text" class="form-control" aria-label="Room number" id="roomNumber">
+                  </div>
+                </div>
+                <div class="col">
+                  <!-- Telephone number -->
+                  <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon3">Telephone number</span>
+                    <input type="text" class="form-control" id="telephoneNumber" aria-describedby="basic-addon3">
+                  </div>
+                </div>
+              </div>
+            </div>
+      
+            <div class="container">
+              <div class="row">
+                <!-- Subject -->
+                <div class="col">
+                    <h2>Device Informations</h2>
+                </div>
+              </div>
+              <div class="row">
+                <!-- Add Device -->
+                <div class="col">
+                  <button type="button" class="btn btn-primary" id="addDevice">Add Device</button>
+                </div>
+              </div>
+              <div class="row"> 
+                <div id="devices">
+                  
+                </div>
+              </div>
+              <div class="row">
+                <button type="button" class="btn btn-success" id="submit">Submit</button>
+              </div>
+      
+            </div>
+          </div>
+    </div>
+</body>
+</html>
